@@ -1,0 +1,110 @@
+"------------------------------------------------------"
+"--------------------basic settings--------------------"
+"------------------------------------------------------"
+" Don't try to be vi compatible
+set nocompatible
+
+" Turn on syntax highlighting
+syntax on
+" molokai color scheme
+colorscheme  molokai
+set t_Co=256
+set background=dark
+
+" set fonts for GUI
+set guifont=Monospace\ 14
+
+" Show line numbers
+set number
+
+" Turn off the beep for GUI
+set noeb vb t_vb=
+
+" Whitespace
+set tabstop=3
+set shiftwidth=3
+set softtabstop=3
+set expandtab
+set noshiftround
+
+" Searching
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" buffer switch shortcut
+nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
+nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+
+map gn :bn<cr>
+map gp :bp<cr>
+map gd :bd<cr>
+
+
+"------------------------------------------------------"
+"-----------Vundle Plugin Management ------------------"
+"------------------------------------------------------"
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'mileszs/ack.vim'
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+"------------------------------------------------------"
+"-------------Specific Plugin Settings-----------------"
+"------------------------------------------------------"
+"
+"-----airline plugin settings ---'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_theme='badwolf'
+" Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
+" Disable all white space warnings in the end of airline
+let g:airline#extensions#whitespace#enabled = 0
+" Enable newly added fonts for power line
+let g:airline_powerline_fonts = 1
+
+
+"----Ack Search Plugin settings ---"
+nnoremap <F4> :Ack! <C-R><C-W> <CR> 
+cnoreabbrev ag Ack!
+
+if executable('ag')
+  let g:ackprg = 'ag --nogroup --nocolor --column'
+endif
+" highlight the keyword
+let g:ackhighlight = 1
+"close the quick-window once any action occurs
+let g:ack_autoclose = 1
