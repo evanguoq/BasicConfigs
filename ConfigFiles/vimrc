@@ -1,24 +1,26 @@
-"------------------------------------------------------"
-"--------------------basic settings--------------------"
-"------------------------------------------------------"
 " Don't try to be vi compatible
 set nocompatible
 
 " Turn on syntax highlighting
 syntax on
-" molokai color scheme
-colorscheme  molokai
-set t_Co=256
-set background=dark
-
-" set fonts for GUI
-set guifont=Monospace\ 14
 
 " Show line numbers
+colorscheme  badwolf
+" Make the gutters darker than the background.
+let g:badwolf_darkgutter = 1
+"colorscheme  molokai
+"colorscheme  morning
+"colorscheme  default
+"colorscheme  monokai
+"colorscheme  monokai2
+"colorscheme  sublimemonokai
+set t_Co=256
+"set background=dark
 set number
-
-" Turn off the beep for GUI
-set noeb vb t_vb=
+"set guifont=Ubuntu\ Mono\ 14
+"set guifont=Monospace\ 9
+"set guifont=Monospace\ 10
+set guifont=Courier\ 10\ Pitch\ 12
 
 " Whitespace
 set tabstop=3
@@ -33,74 +35,113 @@ set incsearch
 set ignorecase
 set smartcase
 
-" buffer switch shortcut
-nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
-nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+let loaded_matchparen = 1
 
+" highlight column border at 80
+highlight ColorColumn ctermbg=darkgray
+set colorcolumn=80
 
-"------------------------------------------------------"
-"-----------Vundle Plugin Management ------------------"
-"------------------------------------------------------"
-set nocompatible              " be iMproved, required
-filetype off                  " required
+" Airline settings
+execute pathogen#infect()
+filetype plugin indent on
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'mileszs/ack.vim'
-
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-
-"------------------------------------------------------"
-"-------------Specific Plugin Settings-----------------"
-"------------------------------------------------------"
-"
-"-----airline plugin settings ---'
-let g:airline#extensions#tabline#enabled = 1
+" Airline settings
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_theme='badwolf'
 " Enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
+" Airline theme settings
+let g:airline_theme='badwolf'
+"let g:airline_powerline_fonts = 1
 " Disable all white space warnings in the end of airline
 let g:airline#extensions#whitespace#enabled = 0
-" Enable newly added fonts for power line
-let g:airline_powerline_fonts = 1
 
 
-"----Ack Search Plugin settings ---"
-nnoremap <F4> :Ack! <C-R><C-W> <CR> 
+" Automatically save the current session whenever vim is closed
+autocmd VimLeave * mksession! ~/.vim/shutdown_session.vim
+
+" <F7> restores that 'shutdown session'
+noremap <F7> :source ~/.vim/shutdown_session.vim<CR>
+
+" reset cscope database
+map <F5> :!cscope -b<CR>:cs reset<CR><CR>
+
+" ack & ag settings
+nnoremap <F4> :Ack! <C-R><C-W> <CR>
 cnoreabbrev ag Ack!
 
+"CtrlP mapping
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+"Exclude files and directories
+set wildignore+=*.ttfp,*.swp,*.zip,*.Srec     " MacOSX/Linux
+
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
 if executable('ag')
-  let g:ackprg = 'ag --nogroup --nocolor --column'
+  let g:ackprg = 'ag --nogroup --nocolor'
+"  let g:ackprg = 'ag --nogroup --nocolor --column'
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
 endif
 " highlight the keyword
 let g:ackhighlight = 1
 "close the quick-window once any action occurs
 let g:ack_autoclose = 1
+" set the height of quickfix window
+let g:ack_qhandler="copen 20"
+" Close the quickfix window with Esc
+autocmd FileType qf nnoremap <buffer><silent> <esc> :quit<cr>
+
+" set GUI background color for YouCompleteMe
+"highlight Pmenu guibg=#303030
+"let g:ycm_global_ycm_extra_conf='/home/guoe/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_global_ycm_extra_conf'
+
+" buffer switch shortcut
+nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
+nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+
+" Display trailing spaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+" Enables cursor line position tracking:
+"set cursorline
+" Removes the underline causes by enabling cursorline:
+"highlight clear CursorLine
+" Sets the line numbering to red background:
+"highlight CursorLineNR ctermbg=red
+
+" These settings highlight a vertical cursor column:
+"set cursorcolumn
+"highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
+"highlight CursorColumn ctermfg=Black ctermbg=Yellow cterm=bold guifg=Black guibg=yellow gui=NONE
+"
+" Enables cursor line position tracking:
+set cursorline
+" Removes the underline causes by enabling cursorline:
+highlight clear CursorLine
+" Sets the line numbering to red background:
+" highlight CursorLineNR ctermbg=red
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
