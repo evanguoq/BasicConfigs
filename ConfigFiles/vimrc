@@ -4,10 +4,9 @@ set nocompatible
 " Turn on syntax highlighting
 syntax on
 
-" Show line numbers
 colorscheme  badwolf
 " Make the gutters darker than the background.
-let g:badwolf_darkgutter = 1
+"let g:badwolf_darkgutter = 1
 "colorscheme  molokai
 "colorscheme  morning
 "colorscheme  default
@@ -16,11 +15,13 @@ let g:badwolf_darkgutter = 1
 "colorscheme  sublimemonokai
 set t_Co=256
 "set background=dark
+
+" Show line numbers
 set number
-"set guifont=Ubuntu\ Mono\ 14
+set guifont=Ubuntu\ Mono\ 14
 "set guifont=Monospace\ 9
 "set guifont=Monospace\ 10
-set guifont=Courier\ 10\ Pitch\ 12
+"set guifont=Courier\ 10\ Pitch\ 12
 
 " Whitespace
 set tabstop=3
@@ -38,8 +39,8 @@ set smartcase
 let loaded_matchparen = 1
 
 " highlight column border at 80
-highlight ColorColumn ctermbg=darkgray
-set colorcolumn=80
+"highlight ColorColumn ctermbg=darkgray
+"set colorcolumn=80
 
 " Airline settings
 execute pathogen#infect()
@@ -59,59 +60,24 @@ let g:airline_theme='badwolf'
 " Disable all white space warnings in the end of airline
 let g:airline#extensions#whitespace#enabled = 0
 
-
-" Automatically save the current session whenever vim is closed
-autocmd VimLeave * mksession! ~/.vim/shutdown_session.vim
-
-" <F7> restores that 'shutdown session'
-noremap <F7> :source ~/.vim/shutdown_session.vim<CR>
-
-" reset cscope database
-map <F5> :!cscope -b<CR>:cs reset<CR><CR>
+" CtrlSF configurations
+let g:ctrlsf_auto_close = {
+    \ "normal" : 0,
+    \ "compact": 0
+    \}
 
 " ack & ag settings
-nnoremap <F4> :Ack! <C-R><C-W> <CR>
-cnoreabbrev ag Ack!
-
-"CtrlP mapping
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-"Exclude files and directories
-set wildignore+=*.ttfp,*.swp,*.zip,*.Srec     " MacOSX/Linux
-
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-
-if executable('ag')
-  let g:ackprg = 'ag --nogroup --nocolor'
-"  let g:ackprg = 'ag --nogroup --nocolor --column'
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
-" highlight the keyword
-let g:ackhighlight = 1
-"close the quick-window once any action occurs
-let g:ack_autoclose = 1
-" set the height of quickfix window
-let g:ack_qhandler="copen 20"
-" Close the quickfix window with Esc
-autocmd FileType qf nnoremap <buffer><silent> <esc> :quit<cr>
-
-" set GUI background color for YouCompleteMe
-"highlight Pmenu guibg=#303030
-"let g:ycm_global_ycm_extra_conf='/home/guoe/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_global_ycm_extra_conf'
+nnoremap <F4> :CtrlSF<CR>
+let g:ctrlsf_auto_focus = {
+    \ "at": "done",
+    \ "duration_less_than": 1000
+    \ }
+let g:ctrlsf_context = '-C 1'
+let g:ctrlsf_position = 'right'
 
 " buffer switch shortcut
-nnoremap  <silent>   <tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
-nnoremap  <silent> <s-tab>  :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+nnoremap <silent>   <tab> :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
+nnoremap <silent> <s-tab> :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
 
 " Display trailing spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
@@ -121,18 +87,6 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-" Enables cursor line position tracking:
-"set cursorline
-" Removes the underline causes by enabling cursorline:
-"highlight clear CursorLine
-" Sets the line numbering to red background:
-"highlight CursorLineNR ctermbg=red
-
-" These settings highlight a vertical cursor column:
-"set cursorcolumn
-"highlight CursorColumn ctermfg=White ctermbg=Yellow cterm=bold guifg=white guibg=yellow gui=bold
-"highlight CursorColumn ctermfg=Black ctermbg=Yellow cterm=bold guifg=Black guibg=yellow gui=NONE
-"
 " Enables cursor line position tracking:
 set cursorline
 " Removes the underline causes by enabling cursorline:
