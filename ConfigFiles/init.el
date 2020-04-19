@@ -4,43 +4,68 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-;; load emacs 24's package system. Add MELPA repository.
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
-   '("melpa" . "http://melpa.milkbox.net/packages/")
-   t))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(file-name-shadow-mode nil)
  '(global-display-line-numbers-mode t)
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (all-the-icons powerline-evil badwolf-theme airline-themes centaur-tabs helm exec-path-from-shell evil ag))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+    (ahg all-the-icons-ibuffer all-the-icons-ivy use-package monokai-theme dumb-jump counsel all-the-icons ag))))
 
-(add-to-list 'default-frame-alist '(font . "Hack-16"))
+;; Default font
+(add-to-list 'default-frame-alist '(font . "Hack-10"))
+
+;; load emacs 24's package system. Add MELPA repository.
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list
+   'package-archives
+   '("melpa" . "http://melpa.milkbox.net/packages/")
+   t))
+
+;; This is only needed once, near the top of the file
+(require 'use-package)
+
+(require 'package)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (require 'evil)
 (evil-mode 1)
+(with-eval-after-load 'evil
+    (defalias #'forward-evil-word #'forward-evil-symbol)
+    ;; make evil-search-word look for symbol rather than word boundaries
+    (setq-default evil-symbol-word-search t))
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(setq evil-emacs-state-modes (delq 'ibuffer-mode evil-emacs-state-modes))
+;; Hide all buffers starting with an asterisk 
+(require 'ibuf-ext)
+(add-to-list 'ibuffer-never-show-predicates "^\\*")
 
 (require 'all-the-icons)
-(all-the-icons-ivy-setup)
+(require 'all-the-icons-ivy)
+(require 'all-the-icons-ibuffer)
 
+;; C programming settings
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 3)
+(defvaralias 'c-basic-offset 'tab-width)
+(defvaralias 'cperl-indent-level 'tab-width)
+(add-hook 'c-mode-common-hook (lambda ()
+      (local-set-key (kbd "RET") 'newline-and-indent)))
+
+;; Syntacs scheme
+(load-theme 'monokai t)
+
+;; Open files side by side as default
+(setq split-height-threshold nil) 
+(setq split-width-threshold 0) 
+
+;; Ivy and Counsel settings
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
@@ -63,11 +88,6 @@
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-;; This is only needed once, near the top of the file
-(require 'use-package)
-
-(global-set-key (kbd "C-]") nil)
-(global-set-key (kbd "C-t") nil)
 (dumb-jump-mode)
 (use-package dumb-jump
   :bind (("M-g o" . dumb-jump-go-other-window)
@@ -79,29 +99,18 @@
   :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
   :ensure)
 
-(require 'centaur-tabs)
-(centaur-tabs-mode t)
-(setq centaur-tabs-set-icons t)
-(setq centaur-tabs-set-modified-marker t)
-(setq centaur-tabs-modified-marker "*")
-(define-key evil-normal-state-map (kbd "<tab>") 'centaur-tabs-forward)
-(define-key evil-normal-state-map (kbd "<S-tab>") 'centaur-tabs-backward)
-(setq centaur-tabs-cycle-scope 'tabs)
+;; Start server at start up
+(server-start)
 
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 3)
-(defvaralias 'c-basic-offset 'tab-width)
-(defvaralias 'cperl-indent-level 'tab-width)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
-(require 'powerline)
-(powerline-default-theme)
-;;(powerline-center-evil-theme)
-;;(powerline-vim-theme)
+;; No back-up files please!
+(setq make-backup-files nil)
 
-(load-theme 'badwolf t)
-(require 'powerline-evil)
-
-(with-eval-after-load 'evil
-    (defalias #'forward-evil-word #'forward-evil-symbol)
-    ;; make evil-search-word look for symbol rather than word boundaries
-    (setq-default evil-symbol-word-search t))
+;; Hg support
+(require 'ahg)
