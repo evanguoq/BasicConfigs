@@ -58,6 +58,9 @@
 (add-hook 'c-mode-common-hook (lambda ()
       (local-set-key (kbd "RET") 'newline-and-indent)))
 
+(setq c-default-style "linux"
+      c-basic-offset 3)
+
 ;; Syntacs scheme
 (load-theme 'monokai t)
 
@@ -71,7 +74,7 @@
 (setq enable-recursive-minibuffers t)
 ;; enable this if you want `swiper' to use it
 (setq search-default-mode #'char-fold-to-regexp)
-(global-set-key "\C-s" 'swiper)
+;;(global-set-key "\C-s" 'swiper)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "<f6>") 'ivy-resume)
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -88,17 +91,6 @@
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-(dumb-jump-mode)
-(use-package dumb-jump
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-]" . dumb-jump-go)
-         ("M-t" . dumb-jump-back)
-         ("M-g i" . dumb-jump-go-prompt)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
-  :ensure)
-
 ;; Start server at start up
 (server-start)
 
@@ -111,6 +103,3 @@
 
 ;; No back-up files please!
 (setq make-backup-files nil)
-
-;; Hg support
-(require 'ahg)
