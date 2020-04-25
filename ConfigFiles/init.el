@@ -14,7 +14,7 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (ahg all-the-icons-ibuffer all-the-icons-ivy use-package monokai-theme dumb-jump counsel all-the-icons ag))))
+    (all-the-icons-ibuffer all-the-icons-ivy use-package monokai-theme counsel all-the-icons ag))))
 
 ;; Default font
 (add-to-list 'default-frame-alist '(font . "Hack-10"))
@@ -51,15 +51,20 @@
 (require 'all-the-icons-ibuffer)
 
 ;; C programming settings
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 3)
-(defvaralias 'c-basic-offset 'tab-width)
-(defvaralias 'cperl-indent-level 'tab-width)
-(add-hook 'c-mode-common-hook (lambda ()
-      (local-set-key (kbd "RET") 'newline-and-indent)))
+(defun tait-c-mode-common-hook ()
+ ;; my customizations for all of c-mode, c++-mode, objc-mode, java-mode
+ (c-set-offset 'substatement-open 0)
+ (c-set-offset 'case-label '+)
+ ;; other customizations can go here
 
-(setq c-default-style "linux"
-      c-basic-offset 3)
+ (setq c++-tab-always-indent t)
+ (setq c-basic-offset 3)                  ;; Default is 2
+ (setq c-indent-level 3)                  ;; Default is 2
+ (setq tab-width 3)
+ (setq indent-tabs-mode t)  ; use spaces only if nil
+ )
+(add-hook 'c-mode-common-hook 'tait-c-mode-common-hook)
+(add-hook 'c++-mode-common-hook 'tait-c-mode-common-hook)
 
 ;; Syntacs scheme
 (load-theme 'monokai t)
@@ -73,7 +78,7 @@
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
 ;; enable this if you want `swiper' to use it
-(setq search-default-mode #'char-fold-to-regexp)
+;;(setq search-default-mode #'char-fold-to-regexp)
 ;;(global-set-key "\C-s" 'swiper)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
 (global-set-key (kbd "<f6>") 'ivy-resume)
