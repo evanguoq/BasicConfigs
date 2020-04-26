@@ -39,7 +39,8 @@ just comment it out by adding a semicolon to the start of the line.
 #+END_SRC
 ** default org file opened at start up
 #+BEGIN_SRC emacs-lisp
-(find-file "/Users/evanguo/Org/ToDoListEvan.org")
+;;(find-file "/Users/evanguo/Org/ToDoListEvan.org")
+(find-file "~/Org/jiraIssues.org")
 #+END_SRC
 
 * evil mode
@@ -84,10 +85,19 @@ just comment it out by adding a semicolon to the start of the line.
 (add-hook 'c++-mode-common-hook 'tait-c-mode-common-hook)
 #+END_SRC
 
-* Open files side by side as default
+* C tags
+#+BEGIN_SRC emacs-lisp
+(setq tags-table-list '("~/Code/Firmware/TAGS" "~/Code/Unpub/TAGS"))
+#+END_SRC
+* Open files
+** Open files side by side as default
 #+BEGIN_SRC emacs-lisp
 (setq split-height-threshold nil) 
 (setq split-width-threshold 0) 
+#+END_SRC
+** refresh all buffers when files have changed on disk.
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode t)
 #+END_SRC
 
 * Ivy and Counsel settings
@@ -125,7 +135,7 @@ just comment it out by adding a semicolon to the start of the line.
 * fonts
 ** English font only
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(font . "Hack-16"))
+(add-to-list 'default-frame-alist '(font . "Hack-11"))
 #+END_SRC
 ** Both English and Chinese fonts
 
