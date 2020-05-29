@@ -4,24 +4,13 @@ set nocompatible
 " Turn on syntax highlighting
 syntax on
 
-colorscheme  badwolf
-" Make the gutters darker than the background.
-"let g:badwolf_darkgutter = 1
+colorscheme  default
 "colorscheme  molokai
-"colorscheme  morning
-"colorscheme  default
 "colorscheme  monokai
-"colorscheme  monokai2
-"colorscheme  sublimemonokai
-set t_Co=256
-"set background=dark
 
 " Show line numbers
 set number
-set guifont=Ubuntu\ Mono\ 14
-"set guifont=Monospace\ 9
-"set guifont=Monospace\ 10
-"set guifont=Courier\ 10\ Pitch\ 12
+set guifont=Hack\ 10
 
 " Whitespace
 set tabstop=3
@@ -30,62 +19,51 @@ set softtabstop=3
 set expandtab
 set noshiftround
 
+" always enable status line
+set laststatus=2
+"hi StatusLine guibg=black guifg=lightgray
+
+set statusline=
+set statusline +=%1*%m%*                "modified flag
+set statusline +=%4*\ %<%F%*            "full path
+set statusline+=%8*\ %=\ row:%l/%L\ (%03p%%)\  "Rownumber/total (%)
+set statusline+=%9*\ col:%03c\                 "Colnr
+set statusline+=%0*\ %P\ \           "Modified? Readonly? Top/bot.
+hi User1 guifg=black guibg=LightGray
+hi User4 guifg=black guibg=LightGray
+hi User2 guifg=black guibg=LightGray
+hi User8 guifg=black guibg=LightGray
+hi User9 guifg=black guibg=LightGray
+hi statusline guibg=black guifg=LightGray
+
 " Searching
 set hlsearch
 set incsearch
 set ignorecase
 set smartcase
 
-let loaded_matchparen = 1
-
-" highlight column border at 80
-"highlight ColorColumn ctermbg=darkgray
-"set colorcolumn=80
-
 " Airline settings
 execute pathogen#infect()
 filetype plugin indent on
 
-" Airline settings
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-" Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
-" Airline theme settings
-let g:airline_theme='badwolf'
-"let g:airline_powerline_fonts = 1
-" Disable all white space warnings in the end of airline
-let g:airline#extensions#whitespace#enabled = 0
-
 " CtrlSF configurations
+nnoremap <F4> :CtrlSF<CR>
 let g:ctrlsf_auto_close = {
     \ "normal" : 0,
     \ "compact": 0
     \}
-
-" ack & ag settings
-nnoremap <F4> :CtrlSF<CR>
 let g:ctrlsf_auto_focus = {
     \ "at": "done",
     \ "duration_less_than": 1000
     \ }
-let g:ctrlsf_context = '-C 1'
+let g:ctrlsf_context = '-C 0'
 let g:ctrlsf_position = 'right'
+let g:ctrlsf_leading_space = 4
+" let g:ctrlsf_selected_line_hl = 'op'
 
 " buffer switch shortcut
 nnoremap <silent>   <tab> :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bnext<CR>
 nnoremap <silent> <s-tab> :if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
-
-" Display trailing spaces
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-autocmd BufWinLeave * call clearmatches()
 
 " Enables cursor line position tracking:
 set cursorline
