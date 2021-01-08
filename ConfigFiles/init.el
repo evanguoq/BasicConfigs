@@ -60,19 +60,22 @@
 ;; Hide all buffers starting with an asterisk 
 (require 'ibuf-ext)
 (add-to-list 'ibuffer-never-show-predicates "^\\*")
-
 ;; C code style
 (defun tait-c-mode-common-hook ()
-  ;; my customizations for all of c-mode, c++-mode, objc-mode, java-mode
+  ;; my customizations for all of c-mode, c++-mode
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'case-label '+)
-  ;; other customizations can go here
+  (c-set-offset 'brace-list-open 0)
+  (c-set-offset 'brace-list-intro '+)
 
   (setq c++-tab-always-indent t)
   (setq c-basic-offset 3)    ;; Default is 2
   (setq c-indent-level 3)    ;; Default is 2
   (setq tab-width 3)
   (setq indent-tabs-mode t)  ; use spaces only if nil
+  ;; NB: You can find the correct indentation identifier using C-c C-s
+  ;; (c-show-syntactic-information) on any line of a C++ buffer. It will
+  ;; perform the syntactic analysis of the line and display the results.
   )
 (add-hook 'c-mode-common-hook 'tait-c-mode-common-hook)
 (add-hook 'c++-mode-common-hook 'tait-c-mode-common-hook)
