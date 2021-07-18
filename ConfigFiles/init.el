@@ -18,13 +18,13 @@
  '(inhibit-startup-screen t)
  '(package-selected-packages
    (quote
-    (dumb-jump wgrep-ack exec-path-from-shell rg use-package org-bullets ivy evil))))
+    (treemacs-projectile wgrep-ack rg use-package org-bullets ivy evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 120 :width normal)))))
 
 ;; This is only needed once, near the top of the file
 ;; package: use-package
@@ -34,7 +34,8 @@
 
 ;; Default frame behaviours
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(font . "Hack-13"))
+(add-to-list 'default-frame-alist '(font . "YaHei Consolas Hybrid-11"))
+;;(add-to-list 'default-frame-alist '(font . "Hack-10"))
 
 ;; syntax scheme
 ;;(load-theme 'monokai t)
@@ -60,7 +61,9 @@
 ;; Hide all buffers starting with an asterisk 
 (require 'ibuf-ext)
 (add-to-list 'ibuffer-never-show-predicates "^\\*")
+
 ;; C code style
+(setq-default indent-tabs-mode nil)
 (defun tait-c-mode-common-hook ()
   ;; my customizations for all of c-mode, c++-mode
   (c-set-offset 'substatement-open 0)
@@ -72,7 +75,6 @@
   (setq c-basic-offset 3)    ;; Default is 2
   (setq c-indent-level 3)    ;; Default is 2
   (setq tab-width 3)
-  (setq indent-tabs-mode t)  ; use spaces only if nil
   ;; NB: You can find the correct indentation identifier using C-c C-s
   ;; (c-show-syntactic-information) on any line of a C++ buffer. It will
   ;; perform the syntactic analysis of the line and display the results.
@@ -95,6 +97,12 @@
 (setq split-height-threshold nil) 
 (setq split-width-threshold 0) 
 
+;; Refresh all buffers when files have changed on disk.
+(global-auto-revert-mode t)
+
+;; Point goes to the last place where previously visited
+(save-place-mode 1)
+
 ;; package: ivy
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
@@ -109,10 +117,40 @@
 ;; package: rg
 (global-set-key [f4] 'rg-dwim-project-dir)
 
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+;;(when (memq window-system '(mac ns x))
+;;  (exec-path-from-shell-initialize))
 
-;; package: dumb-jump
-;; you can now use M-., Ctrl+] (or gd when using Evil).
-(setq dumb-jump-force-searcher 'rg)
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+;; ctags file path
+;;(setq tags-table-list '("/home/guoe/Code/Firmware.Unpublished/TAGS"))
+(setq tags-table-list '("/home/guoe/Code/Firmware/TAGS"))
+
+;;(require 'projectile)
+;;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;;(projectile-mode +1)
+
+;;; display-buffer
+;;
+;; The default behaviour of `display-buffer' is to always create a new
+;; window. As I normally use a large display sporting a number of
+;; side-by-side windows, this is a bit obnoxious.
+;;
+;; The code below will make Emacs reuse existing windows, with the
+;; exception that if you have a single window open in a large display,
+;; it will be split horizontally.
+(setq pop-up-windows nil)
+
+(defun my-display-buffer-function (buf not-this-window)
+  (if (and (not pop-up-frames)
+           (one-window-p)
+           (or not-this-window
+               (not (eq (window-buffer (selected-window)) buf)))
+           (> (frame-width) 162))
+      (split-window-horizontally))
+  ;; Note: Some modules sets `pop-up-windows' to t before calling
+  ;; `display-buffer' -- Why, oh, why!
+  (let ((display-buffer-function nil)
+        (pop-up-windows nil))
+    (display-buffer buf not-this-window)))
+
+(setq display-buffer-function 'my-display-buffer-function)
+
