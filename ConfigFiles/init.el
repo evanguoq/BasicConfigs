@@ -154,3 +154,7 @@
 
 (setq display-buffer-function 'my-display-buffer-function)
 
+
+;; python support
+(elpy-enable)
+(setq python-shell-completion-native-enable nil)
